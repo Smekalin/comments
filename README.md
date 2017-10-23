@@ -47,4 +47,4 @@ class Comment {
 3) Геттер nodeFromClass() который преобразует класс в элемент html, который можно прикреплять к списку
 
 ### Пример
-Для примера откройте index.html
+Для примера откройте index.html или перейдите по адресу https://smekalin.github.io/comments/
