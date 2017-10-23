@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Comments</title>
+</head>
+<body>
+  <div id="container">
+    <div>
+      <span>Comments:</span>
+      <span id="count-of-comments"></span>
+    </div>
+    <ul id="comments"></ul>
+  </div>
+
+
+<input type="text" class="new-comment-text">
+<button id="add-comment">Add Comment</button>
+</body>
+
+<script>
+  class Comment {
+    constructor({id, text, isRoot}) {
+      this.commentId = id;
+      this.commentText = text;
+      this.isRoot = isRoot;
+      this.childrenList = document.createElement("ul");
+    }
+
+    get nodeFromClass() {
+      let commentBlock = document.createElement("div");
+      let span = document.createElement("span");
+      span.innerText = `Id: ${this.commentId} \n Comment: ${this.commentText}`;
+      commentBlock.appendChild(span);
+      commentBlock.appendChild(this.childrenList);
+      if (this.isRoot) {
+        const replyButton = this.pinReplyButton();
+        commentBlock.appendChild(replyButton);
+      }
+      return commentBlock;
+    }
+
+    pinReplyButton() {
+      let replyButton = document.createElement("button");
+      replyButton.textContent = "reply";
+      replyButton.classList.add("reply-button");
+      replyButton.addEventListener("click", () => {
+        this.addChildComment();
+      })
+      return replyButton;
+    }
+
+    addChildComment() {
+      lengthOfComments++;
+      const commentBuilder = {id: lengthOfComments, text: "replyComment", isRoot: false};
+      const childComment = new Comment(commentBuilder);
+      this.childrenList.appendChild(childComment.nodeFromClass);
+      refreshCountOfComments();
+    }
+  }
+
+  function refreshCountOfComments() {
+    let countSpan = document.getElementById("count-of-comments");
+    countSpan.innerText = lengthOfComments;
+  }
+
+  const comments = document.getElementById("comments");
+
+  let lengthOfComments = 0;
+  function addRootComment() {
+    let inputText = document.getElementsByClassName("new-comment-text")[0];
+    lengthOfComments++;
+    const commentBuilder = {id: lengthOfComments, text: inputText.value, isRoot: true};
+    const newComment = new Comment(commentBuilder);
+    let li = document.createElement("li");
+    li.appendChild(newComment.nodeFromClass);
+    comments.appendChild(li);
+    inputText.value = "";
+    refreshCountOfComments();
+  }
+
+  let button = document.getElementById("add-comment");
+  button.addEventListener("click", addRootComment);
+</script>
+
+
+<style>
+  #container {
+    width: 50%;
+    min-height: 50px;
+    background-color: skyblue;
+  }
+
+  #comments > li {
+    list-style: none;
+    border-top: solid red 1px;
+    padding: 10px 0px;
+  }
+
+  #comments li > div > ul {
+    border-left: 1px solid black;
+  }
+
+  .reply-button {
+    margin-top: 10px;
+  }
+
+</style>
+</html>
